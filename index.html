@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<style>
+#mask {
+    position: fixed;
+    top: 0;
+    left: 0;
+    position: absolute;
+    background: rgba(0,0,0,0.5);
+    background:transparent\9;
+    filter:progid:DXImageTransform.Microsoft.Gradient(
+    startColorStr=#80000000,endColorStr=#80000000
+    );
+    display: none;
+}
+#mask_td {text-align:center;}
+
+.animated.bounceIn{
+    -webkit-animation-duration: .75s;
+    animation-duration: .75s;
+}
+
+@keyframes bounceIn {
+  from, 20%, 40%, 60%, 80%, to {
+    -webkit-animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+    animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+  }
+
+  0% {
+    opacity: 0;
+    -webkit-transform: scale3d(.3, .3, .3);
+    transform: scale3d(.3, .3, .3);
+  }
+
+  20% {
+    -webkit-transform: scale3d(1.1, 1.1, 1.1);
+    transform: scale3d(1.1, 1.1, 1.1);
+  }
+
+  40% {
+    -webkit-transform: scale3d(.9, .9, .9);
+    transform: scale3d(.9, .9, .9);
+  }
+
+  60% {
+    opacity: 1;
+    -webkit-transform: scale3d(1.03, 1.03, 1.03);
+    transform: scale3d(1.03, 1.03, 1.03);
+  }
+
+  80% {
+    -webkit-transform: scale3d(.97, .97, .97);
+    transform: scale3d(.97, .97, .97);
+  }
+
+  to {
+    opacity: 1;
+    -webkit-transform: scale3d(1, 1, 1);
+    transform: scale3d(1, 1, 1);
+  }
+}
+.bounceIn {
+  -webkit-animation-name: bounceIn;
+  animation-name: bounceIn;
+}
+
+</style>
+<img src="hy1.png" width="100px" id="img" />
+<table id="mask"><tr><td id="mask_td"></td></tr></table>
+<script>
+//判断浏览器
+var isIE=navigator.userAgent.match(/MSIE (\d)/i);
+isIE=isIE?isIE[1]:isIE;
+//声明变量
+var img,mask;
+//获取元素
+img=document.getElementById("img");
+mask=document.getElementById("mask");
+mask.td=document.getElementById("mask_td");
+//计算mask的大小
+mask.setSize=function(){
+ //获取文档可见区域宽度并设置到mask上
+ var de=document.documentElement;
+ mask.style.width=de.clientWidth+"px"
+ mask.style.height=de.clientHeight+"px";
+};
+//添加show方法
+mask.show=function(){
+ //隐藏页面的滚动条
+ document[
+ isIE<9?"documentElement":"body"
+ ].style.overflow="hidden";
+ //计算mask的大小
+ mask.setSize();
+ //显示
+ mask.style.display=isIE==6?"block":"table";
+};
+//添加hide方法
+mask.hide=function(){
+ //显示页面滚动条
+ document[
+ isIE<9?"documentElement":"body"
+ ].style.overflow="";
+ //清空里面的内容
+ mask.td.innerHTML="";
+ //隐藏
+ mask.style.display="none";
+};
+//添加append方法
+mask.append=function(e){
+ //在mask的TD里面添加内容哦你
+ mask.td.appendChild(e);
+console.info(e);
+var myClass = document.createAttribute("class");
+    myClass.value = "animated bounceIn";
+    e.setAttributeNode(myClass);
+    
+};
+//点击mask关闭
+mask.onclick=function(e){
+ //判断事件来源，如果是空白区域被点击了就关闭mask
+ e=e||event;
+ (e.target||e.srcElement)==mask.td&&mask.hide();
+};
+//窗体大小改变时也改变mask的大小
+window.onresize=function(){
+ mask.setSize();
+};
+//点击图片的事件
+img.onclick=function(){
+ //创建一个图片对象
+ var o=new Image;
+ //设置图片的地址
+ o.src=img.src;
+ //在mask内添加内容
+ mask.append(o);
+ //显示mask
+ mask.show();
+};
+</script>
